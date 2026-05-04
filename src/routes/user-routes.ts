@@ -40,4 +40,27 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       email: t.String(),
       password: t.String(),
     })
+  })
+  .post("/current", async ({ headers, set }) => {
+    try {
+      const authHeader = headers['authorization'];
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new Error("user tidak ditemukan");
+      }
+
+      const token = authHeader.split(' ')[1];
+      const result = await UserService.getCurrentUser(token);
+      return result;
+    } catch (error: any) {
+      if (error.message === "user tidak ditemukan") {
+        set.status = 401;
+        return {
+          error: "user tidak ditemukan",
+          message: "user tidak ditemukan"
+        };
+      }
+
+      set.status = 500;
+      return { message: "Internal Server Error" };
+    }
   });
