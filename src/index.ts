@@ -3,7 +3,7 @@ import { userRoutes } from "./routes/user-routes";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
-  .use(userRoutes)
+  .group("/api", app => app.use(userRoutes))
   .listen(3000);
 
 console.log(

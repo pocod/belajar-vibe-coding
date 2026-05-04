@@ -69,4 +69,42 @@ export class UserService {
       token,
     };
   }
+
+  static async getCurrentUser(token: string) {
+    // 1. Cari session yang valid dan join dengan user
+    const [result] = await db
+      .select({
+        user: {
+          id: users.id,
+          name: users.name,
+          createdAt: users.createdAt,
+          updatedAt: users.updatedAt,
+        },
+        expiresAt: sessions.expiresAt,
+      })
+      .from(sessions)
+      .innerJoin(users, eq(sessions.userId, users.id))
+      .where(eq(sessions.token, token))
+      .limit(1);
+
+    if (!result) {
+      throw new Error("user tidak ditemukan");
+    }
+
+    // 2. Cek apakah session sudah expired
+    if (new Date(result.expiresAt) < new Date()) {
+      throw new Error("user tidak ditemukan");
+    }
+
+    // 3. Return data sesuai spesifikasi
+    return {
+      data: {
+        id: result.user.id,
+        name: result.user.name,
+        created_at: result.user.createdAt,
+        updated_at: result.user.updatedAt,
+      },
+      message: "user berhasil ditemukan",
+    };
+  }
 }
