@@ -1,0 +1,21 @@
+{
+  "name": "belajar-vibe-coding",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "elysia": "latest",
+    "mysql2": "^3.22.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.10"
+  },
+  "module": "src/index.js"
+}
